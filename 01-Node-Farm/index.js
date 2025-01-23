@@ -2,8 +2,19 @@ const fs = require('fs');
 const http = require('http');
 
 const server = http.createServer((req, res) => {
-  res.end('Request has just hit');
-  console.lof(req);
+  const pathName = req.url;
+  if (pathName === '/' || pathName === '/overview') {
+    res.end('OVERVIEW PAGE');
+  } else if (pathName === '/products') {
+    res.end('PRODUCTS');
+  } else {
+    res.writeHead(404, {
+      'content-type': 'text/html',
+      'my-header': '404 Header',
+    });
+
+    res.end('404 Response');
+  }
 });
 
 server.listen(8000, '127.0.0.1', () => {
