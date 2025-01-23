@@ -1,5 +1,6 @@
 const fs = require('fs');
 const http = require('http');
+const url = require('url');
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const templateOverview = fs.readFileSync(
   `${__dirname}/templates/template-overview.html`,
@@ -10,6 +11,12 @@ const templateProduct = fs.readFileSync(
   'utf-8'
 );
 
+const templateProductCard = fs.readFileSync(
+  `${__dirname}/templates/template-product.html`,
+  'utf-8'
+);
+
+const productData = JSON.parse(data);
 const replaceProductInfo = (templateProductHTML, product) => {
   let temp = templateProductHTML.replace(
     '/{%PRODUCTNAME%}/g',
@@ -22,15 +29,13 @@ const replaceProductInfo = (templateProductHTML, product) => {
   temp = temp.replace(/{%NUTRIENTS%}/g, product.nutrients);
   temp = temp.replace(/{%QUANTITY%}/g, product.quantity);
   temp = temp.replace(/{%PRICE%}/g, product.price);
-  temp = temp.replace(/{%DESCRIPTION%}/g, product.desription);
+  temp = temp.replace(/{%DESCRIPTION%}/g, product.description);
   if (!product.organic) temp.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
   return temp;
 };
 
-const productData = JSON.parse(data);
-
 const server = http.createServer((req, res) => {
-  const pathName = req.url;
+  const { pathname: pathName, query } = url.parse(req.url, true);
 
   if (pathName === '/' || pathName === '/overview') {
     res.writeHead('200', {
@@ -41,13 +46,19 @@ const server = http.createServer((req, res) => {
       .map((product) => replaceProductInfo(templateProduct, product))
       .join('');
 
-    console.log(productList);
     const output = templateOverview.replace('{%PRODUCT_CARDS%}', productList);
-    console.log(templateOverview);
-    console.log(output);
     res.end(output);
-  } else if (pathName === '/products') {
-    res.end('PRODUCTS');
+  } else if (pathName === '/product') {
+    res.writeHead(200, {
+      'content-type': 'text/html',
+    });
+
+    const productTemplate = replaceProductInfo(
+      templateProductCard,
+      productData[query.id]
+    );
+
+    res.end(productTemplate);
   } else if (pathName === '/api') {
     res.writeHead(200, {
       'Content-Type': 'application/json',
