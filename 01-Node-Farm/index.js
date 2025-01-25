@@ -1,6 +1,8 @@
 const fs = require('fs');
 const http = require('http');
 const url = require('url');
+const replaceProductInfo = require('./modules/replaceTemplate');
+
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const templateOverview = fs.readFileSync(
   `${__dirname}/templates/template-overview.html`,
@@ -17,22 +19,6 @@ const templateProductCard = fs.readFileSync(
 );
 
 const productData = JSON.parse(data);
-const replaceProductInfo = (templateProductHTML, product) => {
-  let temp = templateProductHTML.replace(
-    '/{%PRODUCTNAME%}/g',
-    product.productName
-  );
-  temp = temp.replace(/{%ID%}/g, product.id);
-  temp = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
-  temp = temp.replace(/{%IMAGE%}/g, product.image);
-  temp = temp.replace(/{%FROM%}/g, product.from);
-  temp = temp.replace(/{%NUTRIENTS%}/g, product.nutrients);
-  temp = temp.replace(/{%QUANTITY%}/g, product.quantity);
-  temp = temp.replace(/{%PRICE%}/g, product.price);
-  temp = temp.replace(/{%DESCRIPTION%}/g, product.description);
-  if (!product.organic) temp.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
-  return temp;
-};
 
 const server = http.createServer((req, res) => {
   const { pathname: pathName, query } = url.parse(req.url, true);
