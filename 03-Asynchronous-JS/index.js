@@ -20,11 +20,30 @@ const writeToFilePromise = (filePath, data) =>
     });
   });
 
-readFilePromise('./dog.txt')
-  .then((data) =>
-    superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)
-  )
-  .then((res) => writeToFilePromise('dog-img.txt', res.body.message))
-  .catch((err) => {
+// Promise
+// readFilePromise('./dog.txt')
+//   .then((data) =>
+//     superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)
+//   )
+//   .then((res) => writeToFilePromise('dog-img.txt', res.body.message))
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+//-------------------------------------------------
+// Asynchronous Function returns Promise
+// Async-Await Function is process on the background and when a Promise await it behave like synchronous function and untill return a value. This Async function take to thread pool. Event Loop is keep processing to code besides this.
+
+const readAndWriteFileAsync = async () => {
+  try {
+    const data = await readFilePromise('./dog.txt');
+    const res = await superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
+    await writeToFilePromise('dog-img.txt', res.body.message);
+  } catch (err) {
     console.log(err);
-  });
+  }
+};
+
+readAndWriteFileAsync();
