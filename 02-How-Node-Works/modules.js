@@ -8,4 +8,5 @@ console.log(calc2.add(4, 6));
 console.log(add(6, 6));
 
 // console.log(arguments);
-// console.log(require('module').wrapper);
+console.log(require('module'));
+console.log(require('module').wrapper);
