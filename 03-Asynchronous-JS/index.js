@@ -1,3 +1,4 @@
+const { error } = require('console');
 const fs = require('fs');
 const superagent = require('superagent');
 
@@ -18,6 +19,7 @@ const writeToFilePromise = (filePath, data) =>
     fs.writeFile(filePath, data, (err) => {
       if (err) reject('There is an error while writing the file');
     });
+    resolve('Success');
   });
 
 // Promise
@@ -41,9 +43,20 @@ const readAndWriteFileAsync = async () => {
       `https://dog.ceo/api/breed/${data}/images/random`
     );
     await writeToFilePromise('dog-img.txt', res.body.message);
+    return 'Logs 🧩';
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };
 
-readAndWriteFileAsync();
+(async () => {
+  try {
+    console.log('Step -> 1');
+    const x = await readAndWriteFileAsync();
+    console.log(x);
+    console.log('Step -> 3');
+  } catch (err) {
+    console.log(err);
+  }
+})();
