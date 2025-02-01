@@ -50,9 +50,10 @@ const readAndWriteFileAsync = async () => {
     );
 
     const allResuests = await Promise.all([res1, res2, res3]);
-    const res = allResuests.map((item) => item.body.message).join('\n');
 
+    const res = allResuests.map((item) => item.body.message).join('\n');
     await writeToFilePromise('dog-img.txt', res);
+
     return 'Logs 🧩';
   } catch (err) {
     console.log(err);
