@@ -4,15 +4,11 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.status(200).json({ app: 'natours', auhor: 'Gulsah Duzgun' });
-});
-
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf8')
 );
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -20,9 +16,27 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
-});
+};
 
-app.post('/api/v1/tours', (req, res) => {
+const getTour = (req, res) => {
+  const id = req.params.id * 1;
+  const item = tours.find((el) => el.id === id);
+
+  if (!item)
+    return res.status(404).json({
+      status: 'fail',
+      message: 'There is no tour matches with id',
+    });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: item,
+    },
+  });
+};
+
+const createTour = (req, res) => {
   const newTourId = tours[tours.length - 1].id + 1;
   const newTourBody = req.body;
   const newTour = Object.assign({ id: newTourId }, newTourBody);
@@ -40,27 +54,9 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
-});
+};
 
-app.get('/api/v1/tours/:id', (req, res) => {
-  const id = req.params.id * 1;
-  const item = tours.find((el) => el.id === id);
-
-  if (!item)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'There is no tour matches with id',
-    });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: item,
-    },
-  });
-});
-
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
   const id = req.params.id * 1;
   const tempTour = tours.find((item) => +item.id === id);
 
@@ -79,13 +75,10 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       });
     }
   );
-});
+};
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   const id = +req.params.id;
-  console.log(tours.some((el) => el.id !== id));
-  console.log(id);
-  console.log(tours[id - 1].id);
   if (!tours.find((el) => el.id === id))
     return res.status(404).send('Not Found tour');
 
@@ -101,7 +94,20 @@ app.delete('/api/v1/tours/:id', (req, res) => {
       });
     }
   );
-});
+};
+
+// app.get('/api/v1/tours', getAllTours);
+// app.post('/api/v1/tours', createTour);
+// app.get('/api/v1/tours/:id', getTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 
 app.listen(9500, () => {
   console.log('Express server is running on 127.0.0.1:9500');
