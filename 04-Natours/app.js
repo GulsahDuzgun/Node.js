@@ -35,13 +35,29 @@ app.post('/api/v1/tours', (req, res) => {
       res.status(201).json({
         status: 'success',
         data: {
-          newTour,
+          tour: newTour,
         },
       });
     }
   );
+});
 
-  res.send('Done');
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const item = tours.find((el) => el.id === id);
+
+  if (!item)
+    return res.status(404).json({
+      status: 'fail',
+      message: 'There is no tour matches with id',
+    });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: item,
+    },
+  });
 });
 
 app.listen(9500, () => {
