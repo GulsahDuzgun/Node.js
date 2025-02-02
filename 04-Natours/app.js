@@ -81,6 +81,28 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   );
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const id = +req.params.id;
+  console.log(tours.some((el) => el.id !== id));
+  console.log(id);
+  console.log(tours[id - 1].id);
+  if (!tours.find((el) => el.id === id))
+    return res.status(404).send('Not Found tour');
+
+  const currentTours = tours.filter((el) => el.id !== id);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(currentTours),
+    (err) => {
+      res.status(204).json({
+        status: 'success',
+        data: 'No data',
+      });
+    }
+  );
+});
+
 app.listen(9500, () => {
   console.log('Express server is running on 127.0.0.1:9500');
 });
