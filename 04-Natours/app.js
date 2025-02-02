@@ -1,7 +1,8 @@
 const fs = require('fs');
 const express = require('express');
-const { json } = require('stream/consumers');
+
 const app = express();
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.status(200).json({ app: 'natours', auhor: 'Gulsah Duzgun' });
@@ -19,6 +20,28 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
+});
+
+app.post('/api/v1/tours', (req, res) => {
+  const newTourId = tours[tours.length - 1].id + 1;
+  const newTourBody = req.body;
+  const newTour = Object.assign({ id: newTourId }, newTourBody);
+  tours.push(newTour);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      res.status(201).json({
+        status: 'success',
+        data: {
+          newTour,
+        },
+      });
+    }
+  );
+
+  res.send('Done');
 });
 
 app.listen(9500, () => {
