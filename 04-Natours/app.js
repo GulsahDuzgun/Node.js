@@ -60,6 +60,27 @@ app.get('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const tempTour = tours.find((item) => +item.id === id);
+
+  const updatedTour = { ...tempTour, ...req.body };
+  const tempArr = tours.map((el) => (el.id === id ? updatedTour : el));
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tempArr),
+    (err) => {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          tour: updatedTour,
+        },
+      });
+    }
+  );
+});
+
 app.listen(9500, () => {
   console.log('Express server is running on 127.0.0.1:9500');
 });
