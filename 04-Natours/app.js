@@ -2,7 +2,12 @@ const fs = require('fs');
 const express = require('express');
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); //midlleware
+
+app.use((req, res, next) => {
+  console.log('Hello from our midlleware');
+  next(); // if next method doesn't exist then it would not move on
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf8')
@@ -30,6 +35,7 @@ const getTour = (req, res) => {
 
   res.status(200).json({
     status: 'success',
+    requestedTime: req.requestedTime,
     data: {
       tour: item,
     },
@@ -103,6 +109,13 @@ const deleteTour = (req, res) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
+app.use((req, res, next) => {
+  req.requestedTime = new Date().toISOString();
+  console.log(req.requestedTime);
+  next();
+});
+
 app
   .route('/api/v1/tours/:id')
   .get(getTour)
