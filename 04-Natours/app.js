@@ -145,20 +145,18 @@ const deleteUser = (req, res) => {
   });
 };
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+const toursRouter = express.Router();
+const userRouter = express.Router();
 
-app
-  .route('/api/v1/tours/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+app.use('/api/v1/tours', toursRouter);
+app.use('/api/v1/users', userRouter);
 
-app.route('/api/v1/users').get(getAllUsers).post(creatUser);
-app
-  .route('/api/v1/users/:id')
-  .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
+toursRouter.route('/').get(getAllTours).post(createTour);
+
+toursRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+userRouter.route('/').get(getAllUsers).post(creatUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 
 app.listen(9500, () => {
   console.log('Express server is running on 127.0.0.1:9500');
