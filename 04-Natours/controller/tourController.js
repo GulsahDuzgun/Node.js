@@ -4,6 +4,16 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf8')
 );
 
+const checkItem = (req, res, next, val) => {
+  const id = +val;
+  if (!tours.find((el) => el.id === id))
+    return res.status(404).json({
+      status: 'fail',
+      message: 'There is no tour matches with id',
+    });
+  next();
+};
+
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -17,12 +27,6 @@ const getAllTours = (req, res) => {
 const getTour = (req, res) => {
   const id = req.params.id * 1;
   const item = tours.find((el) => el.id === id);
-
-  if (!item)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'There is no tour matches with id',
-    });
 
   res.status(200).json({
     status: 'success',
@@ -76,9 +80,6 @@ const updateTour = (req, res) => {
 
 const deleteTour = (req, res) => {
   const id = +req.params.id;
-  if (!tours.find((el) => el.id === id))
-    return res.status(404).send('Not Found tour');
-
   const currentTours = tours.filter((el) => el.id !== id);
 
   fs.writeFile(
@@ -93,4 +94,11 @@ const deleteTour = (req, res) => {
   );
 };
 
-module.exports = { getAllTours, getTour, createTour, updateTour, deleteTour };
+module.exports = {
+  getAllTours,
+  getTour,
+  createTour,
+  updateTour,
+  deleteTour,
+  checkItem,
+};
