@@ -14,6 +14,17 @@ const checkItem = (req, res, next, val) => {
   next();
 };
 
+const checkBody = (req, res, next) => {
+  console.log(req);
+  if (!req?.body?.name || !req?.body?.price) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'There is no price or name information',
+    });
+  }
+  next();
+};
+
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -101,4 +112,5 @@ module.exports = {
   updateTour,
   deleteTour,
   checkItem,
+  checkBody,
 };
