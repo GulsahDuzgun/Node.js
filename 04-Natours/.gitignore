@@ -10,9 +10,11 @@ yarn.lock
 # Environment vars
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+config.env
 
 # IDE specific files
 .idea/
