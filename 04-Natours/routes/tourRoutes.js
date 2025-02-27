@@ -9,7 +9,7 @@ const {
   checkBody,
 } = require('../controller/tourController');
 
-const router = express.Router();
+const router = express.Router(); //sub-router
 
 // router.param('id', (req, res, next, val) => {
 //   console.log(val);
