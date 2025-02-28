@@ -14,27 +14,6 @@ mongoose
     console.log('Mongoose successfully has connected');
   });
 
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    requred: true,
-    unique: true,
-    default: 'name',
-  },
-  rating: Number,
-  price: {
-    type: Number,
-    required: [true, 'A tour must have a price'],
-  },
-});
-
-const Tour = mongoose.model('Tour', tourSchema);
-const tourSample = new Tour({ name: 'Hiking', rating: 4.3, price: 500 });
-tourSample
-  .save()
-  .then((doc) => console.log(doc))
-  .catch((err) => console.log(err.message));
-
 const port =
   app.get('env') === 'development'
     ? process.env.DEV_PORT
