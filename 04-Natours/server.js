@@ -1,18 +1,13 @@
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
-const mongoose = require('mongoose');
 const app = require('./app');
 
-mongoose
-  .connect(process.env.MONGO_DB_LINK, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then((con) => {
-    // console.log(con.connection);
-    console.log('Mongoose successfully has connected');
-  });
+mongoose.connect(process.env.MONGO_DB_LINK, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
 
 const port =
   app.get('env') === 'development'
