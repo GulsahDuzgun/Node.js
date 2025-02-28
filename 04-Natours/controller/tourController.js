@@ -3,9 +3,14 @@ const Tour = require('../models/tourModel');
 const getAllTours = async (req, res) => {
   try {
     //MongoDB Query collection.find({property:val})
-    //const tours = await Tour.find({ difficulty: 'easy', duration: 5 });
-    const tours = await Tour.find().where('difficulty').equals('easy');
-    console.log(req.query);
+    //const tours = await Tour.find().where('difficulty').equals('easy');
+    const queryObj = { ...req.query };
+    const excludedFieds = ['page', 'sort', 'limit', 'fields'];
+    excludedFieds.forEach((el) => delete queryObj[el]);
+
+    const query = Tour.find(queryObj);
+    const tours = await query;
+
     res.status(200).json({
       status: 'success',
       results: tours.length,
