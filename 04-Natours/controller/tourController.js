@@ -58,25 +58,25 @@ const createTour = async (req, res) => {
   }
 };
 
-const updateTour = (req, res) => {
-  const id = req.params.id * 1;
-  const tempTour = tours.find((item) => +item.id === id);
+const updateTour = async (req, res) => {
+  try {
+    const updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-  const updatedTour = { ...tempTour, ...req.body };
-  const tempArr = tours.map((el) => (el.id === id ? updatedTour : el));
-
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tempArr),
-    (err) => {
-      res.status(200).json({
-        status: 'success',
-        data: {
-          tour: updatedTour,
-        },
-      });
-    }
-  );
+    res.status(200).json({
+      status: 'succes',
+      data: {
+        tour: updatedTour,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Sometings went wrong',
+    });
+  }
 };
 
 const deleteTour = (req, res) => {
