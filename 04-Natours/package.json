@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "cross-env NODE_ENV=DEV node server.js",
     "set-env": "SET NODE_ENV=dev&&nodemon server.js",
-    "start:dev": "SET NODE_ENV=development&&nodemon  server.js",
-    "start:prod": "SET NODE_ENV=production&&nodemon  server.js"
+    "start:dev": "cross-env NODE_ENV=DEV nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=PROD nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +16,8 @@
     "express": "^4.21.2",
     "mongoose": "^5.13.23",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
