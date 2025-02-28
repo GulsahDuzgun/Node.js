@@ -10,11 +10,6 @@ app.use(express.json()); //midlleware
 app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
-  console.log('Hello from our midlleware');
-  next(); // if next method doesn't exist then it would not move on
-});
-
-app.use((req, res, next) => {
   req.requestedTime = new Date().toISOString();
   console.log(req.requestedTime);
   next();
