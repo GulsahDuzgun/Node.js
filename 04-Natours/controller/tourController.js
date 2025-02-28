@@ -2,7 +2,10 @@ const Tour = require('../models/tourModel');
 
 const getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    //MongoDB Query collection.find({property:val})
+    //const tours = await Tour.find({ difficulty: 'easy', duration: 5 });
+    const tours = await Tour.find().where('difficulty').equals('easy');
+    console.log(req.query);
     res.status(200).json({
       status: 'success',
       results: tours.length,
