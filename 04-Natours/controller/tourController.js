@@ -79,20 +79,20 @@ const updateTour = async (req, res) => {
   }
 };
 
-const deleteTour = (req, res) => {
-  const id = +req.params.id;
-  const currentTours = tours.filter((el) => el.id !== id);
-
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(currentTours),
-    (err) => {
-      res.status(204).json({
-        status: 'success',
-        data: 'No data',
-      });
-    }
-  );
+const deleteTour = async (req, res) => {
+  try {
+    // const deletedTour = await Tour.deleteOne({ _id: req.params.id });
+    await Tour.findOneAndDelete(req.params.id);
+    res.status(204).json({
+      status: 'success',
+      data: 'null',
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Sometings went wrong',
+    });
+  }
 };
 
 module.exports = {
