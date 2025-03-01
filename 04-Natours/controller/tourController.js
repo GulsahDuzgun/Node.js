@@ -134,10 +134,19 @@ const deleteTour = async (req, res) => {
   }
 };
 
+const aliasTopTours = (req, res, next) => {
+  // Sort documents ascending and when there is a tie then looks for other parameters
+  req.query.sort = 'price, -ratingAverage';
+  req.query.limit = '5';
+  req.query.fields = 'name, price,ratingAverage,summary, difficulty';
+  next(); //middleware exit
+};
+
 module.exports = {
   getAllTours,
   getTour,
   createTour,
   updateTour,
   deleteTour,
+  aliasTopTours,
 };
