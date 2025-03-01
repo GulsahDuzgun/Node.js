@@ -113,6 +113,38 @@ const aliasTopTours = (req, res, next) => {
   next(); //middleware exit
 };
 
+const getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      { $match: { ratingAverage: { $gte: 0 } } },
+      {
+        $group: {
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingQuantity' },
+          avgRating: { $avg: '$ratingAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      { $sort: { numTours: 1 } },
+      { $match: { avgPrice: { $lte: 2000 } } },
+    ]);
+    res.status(200).json({
+      status: 'succes',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Sometings went wrong',
+    });
+  }
+};
+
 module.exports = {
   getAllTours,
   getTour,
@@ -120,4 +152,5 @@ module.exports = {
   updateTour,
   deleteTour,
   aliasTopTours,
+  getTourStats,
 };
