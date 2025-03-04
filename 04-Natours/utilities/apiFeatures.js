@@ -2,7 +2,6 @@ class APIFeautures {
   constructor(query, expressQueryObj) {
     this.query = query;
     this.expressQueryObj = expressQueryObj;
-    console.log(this);
   }
 
   filter() {
