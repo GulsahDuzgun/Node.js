@@ -129,7 +129,6 @@ const getTourStats = async (req, res) => {
         },
       },
       { $sort: { numTours: 1 } },
-      { $match: { avgPrice: { $lte: 2000 } } },
     ]);
     res.status(200).json({
       status: 'succes',

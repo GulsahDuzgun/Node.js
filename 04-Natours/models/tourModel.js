@@ -95,7 +95,11 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 tourSchema.post(/^find/, function (document, next) {
-  console.log(Date.now() - this.startTime);
+  next();
+});
+
+tourSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { secretDocument: { $ne: true } } });
   next();
 });
 
