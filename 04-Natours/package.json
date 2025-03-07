@@ -6,7 +6,8 @@
     "start": "cross-env NODE_ENV=DEV node server.js",
     "set-env": "SET NODE_ENV=dev&&nodemon server.js",
     "start:dev": "cross-env NODE_ENV=DEV nodemon server.js",
-    "start:prod": "cross-env NODE_ENV=PROD nodemon server.js"
+    "start:prod": "cross-env NODE_ENV=PROD nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "",
   "license": "ISC",

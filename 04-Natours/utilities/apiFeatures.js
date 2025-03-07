@@ -29,7 +29,7 @@ class APIFeautures {
 
   limit() {
     if (this.expressQueryObj.fields) {
-      const limitStr = this.expressQueryObj.fields.split(',').join(' ');
+      const limitStr = this.expressQueryObj.fields.split(',').join('');
       this.query = this.query.select(limitStr);
     } else {
       this.query = this.query.select('-__v');
