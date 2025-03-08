@@ -28,6 +28,12 @@ const handleCastErrorDb = (err) => {
   return new AppError(errMessage, 400);
 };
 
+const handleDuplicateFieldsDb = (err) => {
+  const value = err.keyValue.name;
+  const errMessage = `Dublicate field value:${value}. Please use another value`;
+  return new AppError(errMessage, 400);
+};
+
 module.exports = (err, req, res, next) => {
   err.status = err.status || 'fail';
   err.statusCode = err.statusCode || 500;
@@ -36,8 +42,8 @@ module.exports = (err, req, res, next) => {
     sendErrorDEV(res, err);
   } else if (process.env.NODE_ENV === 'PROD') {
     let error = Object.create(err);
-    console.log(error);
     if (error.name === 'CastError') error = handleCastErrorDb(error);
+    if ((err.code = 11000)) error = handleDuplicateFieldsDb(error);
     console.log(error);
     sendErrorProd(res, error);
   }
