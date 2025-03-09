@@ -18,6 +18,13 @@ const port =
     ? +process.env.DEV_PORT
     : +process.env.PROD_PORT;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Express server is running on http://127.0.0.1:${port}`);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
 });
