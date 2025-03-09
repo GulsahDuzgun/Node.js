@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
 // Set NODE_ENV before loading app
 dotenv.config({ path: `${__dirname}/config.env` });
-
 const app = require('./app');
+
+process.on('uncaughtException', (err) => {
+  console.log(err);
+  process.exit(1);
+});
 
 mongoose.connect(process.env.MONGO_DB_LINK, {
   useNewUrlParser: true,

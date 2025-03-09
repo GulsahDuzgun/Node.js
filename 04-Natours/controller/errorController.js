@@ -40,6 +40,7 @@ const handleValidationErrorDb = (err) => {
   return new AppError(message, 400);
 };
 
+//Error control midleware
 module.exports = (err, req, res, next) => {
   err.status = err.status || 'fail';
   err.statusCode = err.statusCode || 500;
