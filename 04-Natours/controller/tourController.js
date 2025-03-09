@@ -27,7 +27,6 @@ const getAllTours = catchAsync(async (req, res, next) => {
     .sort();
   //query = query.find().sort().select().skip().limit();
 
-  console.log(tourFeatures.expressQueryObj);
   const tours = await tourFeatures.query;
 
   res.status(200).json({
@@ -81,7 +80,6 @@ const deleteTour = catchAsync(async (req, res, next) => {
   const deletedTour = await Tour.findByIdAndDelete(req.params.id, (err) => {
     return next(new AppError('No tour found with that ID', 404));
   });
-  console.log(deleteTour);
   if (!deletedTour) {
     return next(new AppError('No tour found with that ID', 404));
   }
@@ -126,7 +124,6 @@ const getTourStats = catchAsync(async (req, res, next) => {
 
 const getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
-  console.log(year);
   const plan = await Tour.aggregate([
     { $unwind: '$startDates' },
     {
