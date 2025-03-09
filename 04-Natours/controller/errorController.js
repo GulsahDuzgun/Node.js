@@ -48,9 +48,7 @@ module.exports = (err, req, res, next) => {
     sendErrorDEV(res, err);
   } else if (process.env.NODE_ENV === 'PROD') {
     let error = { ...err };
-    console.log(err);
-    console.log('------------------------');
-    console.log(error);
+
     if (error.name === 'CastError') error = handleCastErrorDb(error);
     if (err.code === 11000) error = handleDuplicateFieldsDb(error);
     if (err.name === 'ValidationError') error = handleValidationErrorDb(error);
