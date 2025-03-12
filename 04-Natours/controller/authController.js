@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/appError');
+const { promisify } = require('util');
 
 const singToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -49,7 +50,7 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.protect = (req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization ||
@@ -63,6 +64,8 @@ exports.protect = (req, res, next) => {
       new AppError('You are not logged in. Please log in to get access', 401)
     );
   }
-  console.log(token);
+  //verify token
+  const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log(decode);
   next();
-};
+});
